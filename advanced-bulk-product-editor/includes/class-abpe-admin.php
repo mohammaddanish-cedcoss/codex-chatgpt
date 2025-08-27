@@ -43,7 +43,10 @@ class ABPE_Admin {
         if ( isset( $_POST['abpe_bulk_edit_nonce'] ) && wp_verify_nonce( wp_unslash( $_POST['abpe_bulk_edit_nonce'] ), 'abpe_bulk_edit' ) ) {
             $ids      = isset( $_POST['product_ids'] ) ? array_map( 'intval', (array) $_POST['product_ids'] ) : array();
             $data     = array(
+                'title'       => isset( $_POST['title'] ) ? wc_clean( wp_unslash( $_POST['title'] ) ) : '',
+                'description' => isset( $_POST['description'] ) ? wp_kses_post( wp_unslash( $_POST['description'] ) ) : '',
                 'price'       => isset( $_POST['price'] ) ? wc_clean( wp_unslash( $_POST['price'] ) ) : '',
+                'sale_price'  => isset( $_POST['sale_price'] ) ? wc_clean( wp_unslash( $_POST['sale_price'] ) ) : '',
                 'stock'       => isset( $_POST['stock'] ) ? wc_clean( wp_unslash( $_POST['stock'] ) ) : '',
                 'stock_status' => isset( $_POST['stock_status'] ) ? wc_clean( wp_unslash( $_POST['stock_status'] ) ) : '',
                 'categories'  => isset( $_POST['categories'] ) ? array_map( 'intval', (array) $_POST['categories'] ) : array(),

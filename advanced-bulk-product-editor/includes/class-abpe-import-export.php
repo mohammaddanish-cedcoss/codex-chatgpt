@@ -21,13 +21,23 @@ class ABPE_Import_Export {
         header( 'Content-Type: text/csv' );
         header( 'Content-Disposition: attachment;filename=products.csv' );
         $output = fopen( 'php://output', 'w' );
-        fputcsv( $output, array( 'ID', 'Name', 'Price', 'Stock' ) );
+        fputcsv( $output, array( 'ID', 'Name', 'Description', 'Price', 'Sale Price', 'Stock' ) );
         foreach ( $ids as $id ) {
             $product = wc_get_product( $id );
             if ( ! $product ) {
                 continue;
             }
-            fputcsv( $output, array( $id, $product->get_name(), $product->get_regular_price(), $product->get_stock_quantity() ) );
+            fputcsv(
+                $output,
+                array(
+                    $id,
+                    $product->get_name(),
+                    $product->get_description(),
+                    $product->get_regular_price(),
+                    $product->get_sale_price(),
+                    $product->get_stock_quantity()
+                )
+            );
         }
         fclose( $output );
         exit;
@@ -49,15 +59,25 @@ class ABPE_Import_Export {
         // Skip header.
         fgetcsv( $handle );
         while ( ( $data = fgetcsv( $handle ) ) !== false ) {
-            list( $id, $name, $price, $stock ) = $data;
+            list( $id, $name, $description, $price, $sale_price, $stock ) = $data;
             $product = wc_get_product( $id );
             if ( ! $product ) {
                 continue;
             }
+            if ( $name !== '' ) {
+                $product->set_name( $name );
+            }
+            if ( $description !== '' ) {
+                $product->set_description( $description );
+            }
             if ( $price !== '' ) {
                 $product->set_regular_price( $price );
             }
+            if ( $sale_price !== '' ) {
+                $product->set_sale_price( $sale_price );
+            }
             if ( $stock !== '' ) {
+                $product->set_manage_stock( true );
                 $product->set_stock_quantity( (int) $stock );
             }
             $product->save();

@@ -5,9 +5,15 @@
         <div class="notice notice-success"><p><?php echo esc_html( $notice ); ?></p></div>
     <?php endif; ?>
 
+    <style>
+        .abpe-section { background:#fff; border:1px solid #ccd0d4; padding:20px; margin-top:20px; box-shadow:0 1px 1px rgba(0,0,0,0.04); }
+        .abpe-section h2 { margin-top:0; }
+    </style>
+
     <form method="post">
         <?php wp_nonce_field( 'abpe_bulk_edit', 'abpe_bulk_edit_nonce' ); ?>
 
+        <div class="abpe-section">
         <h2><?php esc_html_e( 'Select Products', 'abpe' ); ?></h2>
         <table class="widefat">
             <thead>
@@ -15,6 +21,7 @@
                     <th><?php esc_html_e( 'Select', 'abpe' ); ?></th>
                     <th><?php esc_html_e( 'Name', 'abpe' ); ?></th>
                     <th><?php esc_html_e( 'Price', 'abpe' ); ?></th>
+                    <th><?php esc_html_e( 'Sale Price', 'abpe' ); ?></th>
                     <th><?php esc_html_e( 'Stock', 'abpe' ); ?></th>
                 </tr>
             </thead>
@@ -24,17 +31,32 @@
                         <td><input type="checkbox" name="product_ids[]" value="<?php echo esc_attr( $product->get_id() ); ?>" /></td>
                         <td><?php echo esc_html( $product->get_name() ); ?></td>
                         <td><?php echo esc_html( $product->get_regular_price() ); ?></td>
+                        <td><?php echo esc_html( $product->get_sale_price() ); ?></td>
                         <td><?php echo esc_html( $product->get_stock_quantity() ); ?></td>
                     </tr>
                 <?php endforeach; ?>
             </tbody>
         </table>
+        </div>
 
+        <div class="abpe-section">
         <h2><?php esc_html_e( 'Changes', 'abpe' ); ?></h2>
         <table class="form-table">
             <tr>
+                <th><label for="title"><?php esc_html_e( 'Title', 'abpe' ); ?></label></th>
+                <td><input type="text" name="title" id="title" /></td>
+            </tr>
+            <tr>
+                <th><label for="description"><?php esc_html_e( 'Description', 'abpe' ); ?></label></th>
+                <td><textarea name="description" id="description" rows="3" class="large-text"></textarea></td>
+            </tr>
+            <tr>
                 <th><label for="price"><?php esc_html_e( 'Price', 'abpe' ); ?></label></th>
                 <td><input type="text" name="price" id="price" /></td>
+            </tr>
+            <tr>
+                <th><label for="sale_price"><?php esc_html_e( 'Sale Price', 'abpe' ); ?></label></th>
+                <td><input type="text" name="sale_price" id="sale_price" /></td>
             </tr>
             <tr>
                 <th><label for="stock"><?php esc_html_e( 'Stock Qty', 'abpe' ); ?></label></th>
@@ -61,6 +83,7 @@
                 </td>
             </tr>
         </table>
+        </div>
 
         <p>
             <button type="submit" name="abpe_preview" class="button"><?php esc_html_e( 'Preview Changes', 'abpe' ); ?></button>

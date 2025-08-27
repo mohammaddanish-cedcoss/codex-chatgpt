@@ -29,7 +29,11 @@ class ABPE_Logger {
             if ( ! $product ) {
                 continue;
             }
+            $product->set_name( $values['title'] );
+            $product->set_description( $values['description'] );
             $product->set_regular_price( $values['price'] );
+            $product->set_sale_price( $values['sale_price'] );
+            $product->set_manage_stock( true );
             $product->set_stock_quantity( $values['stock'] );
             $product->set_stock_status( $values['stock_status'] );
             wp_set_post_terms( $id, $values['categories'], 'product_cat' );

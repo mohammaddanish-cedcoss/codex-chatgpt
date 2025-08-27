@@ -24,9 +24,12 @@ class ABPE_Bulk_Editor {
                 continue;
             }
             $preview[ $id ] = array(
-                'name'  => $product->get_name(),
-                'price' => $data['price'] ? $data['price'] : $product->get_regular_price(),
-                'stock' => $data['stock'] ? $data['stock'] : $product->get_stock_quantity(),
+                'name'        => $product->get_name(),
+                'title'       => $data['title'] ? $data['title'] : $product->get_name(),
+                'description' => $data['description'] ? $data['description'] : $product->get_description(),
+                'price'       => $data['price'] ? $data['price'] : $product->get_regular_price(),
+                'sale_price'  => $data['sale_price'] ? $data['sale_price'] : $product->get_sale_price(),
+                'stock'       => $data['stock'] ? $data['stock'] : $product->get_stock_quantity(),
             );
         }
         return $preview;
@@ -48,19 +51,33 @@ class ABPE_Bulk_Editor {
 
             // Store previous values for undo.
             $log[ $id ] = array(
+                'title'        => $product->get_name(),
+                'description'  => $product->get_description(),
                 'price'        => $product->get_regular_price(),
+                'sale_price'   => $product->get_sale_price(),
                 'stock'        => $product->get_stock_quantity(),
                 'stock_status' => $product->get_stock_status(),
                 'categories'   => wp_get_post_terms( $id, 'product_cat', array( 'fields' => 'ids' ) ),
             );
 
+            if ( $data['title'] !== '' ) {
+                $product->set_name( $data['title'] );
+            }
+            if ( $data['description'] !== '' ) {
+                $product->set_description( $data['description'] );
+            }
             if ( $data['price'] !== '' ) {
                 $product->set_regular_price( $data['price'] );
             }
+            if ( $data['sale_price'] !== '' ) {
+                $product->set_sale_price( $data['sale_price'] );
+            }
             if ( $data['stock'] !== '' ) {
+                $product->set_manage_stock( true );
                 $product->set_stock_quantity( (int) $data['stock'] );
             }
             if ( $data['stock_status'] !== '' ) {
+                $product->set_manage_stock( true );
                 $product->set_stock_status( $data['stock_status'] );
             }
             if ( ! empty( $data['categories'] ) ) {
