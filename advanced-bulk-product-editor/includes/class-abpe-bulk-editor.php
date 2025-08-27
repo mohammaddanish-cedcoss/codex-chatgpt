@@ -12,24 +12,23 @@ class ABPE_Bulk_Editor {
     /**
      * Preview changes before applying.
      *
-     * @param array $ids Product IDs.
-     * @param array $data Data to update.
+     * @param array $data Product data keyed by ID.
      * @return array List of proposed changes.
      */
-    public static function preview_changes( $ids, $data ) {
+    public static function preview_changes( $data ) {
         $preview = array();
-        foreach ( $ids as $id ) {
+        foreach ( $data as $id => $fields ) {
             $product = wc_get_product( $id );
             if ( ! $product ) {
                 continue;
             }
             $preview[ $id ] = array(
                 'name'        => $product->get_name(),
-                'title'       => $data['title'] ? $data['title'] : $product->get_name(),
-                'description' => $data['description'] ? $data['description'] : $product->get_description(),
-                'price'       => $data['price'] ? $data['price'] : $product->get_regular_price(),
-                'sale_price'  => $data['sale_price'] ? $data['sale_price'] : $product->get_sale_price(),
-                'stock'       => $data['stock'] ? $data['stock'] : $product->get_stock_quantity(),
+                'title'       => $fields['title'] ? $fields['title'] : $product->get_name(),
+                'description' => $fields['description'] ? $fields['description'] : $product->get_description(),
+                'price'       => $fields['price'] ? $fields['price'] : $product->get_regular_price(),
+                'sale_price'  => $fields['sale_price'] ? $fields['sale_price'] : $product->get_sale_price(),
+                'stock'       => $fields['stock'] ? $fields['stock'] : $product->get_stock_quantity(),
             );
         }
         return $preview;
@@ -38,12 +37,11 @@ class ABPE_Bulk_Editor {
     /**
      * Apply changes to products.
      *
-     * @param array $ids Product IDs.
-     * @param array $data Data to update.
+     * @param array $data Product data keyed by ID.
      */
-    public static function apply_changes( $ids, $data ) {
+    public static function apply_changes( $data ) {
         $log = array();
-        foreach ( $ids as $id ) {
+        foreach ( $data as $id => $fields ) {
             $product = wc_get_product( $id );
             if ( ! $product ) {
                 continue;
@@ -60,28 +58,25 @@ class ABPE_Bulk_Editor {
                 'categories'   => wp_get_post_terms( $id, 'product_cat', array( 'fields' => 'ids' ) ),
             );
 
-            if ( $data['title'] !== '' ) {
-                $product->set_name( $data['title'] );
+            if ( $fields['title'] !== '' ) {
+                $product->set_name( $fields['title'] );
             }
-            if ( $data['description'] !== '' ) {
-                $product->set_description( $data['description'] );
+            if ( $fields['description'] !== '' ) {
+                $product->set_description( $fields['description'] );
             }
-            if ( $data['price'] !== '' ) {
-                $product->set_regular_price( $data['price'] );
+            if ( $fields['price'] !== '' ) {
+                $product->set_regular_price( $fields['price'] );
             }
-            if ( $data['sale_price'] !== '' ) {
-                $product->set_sale_price( $data['sale_price'] );
+            if ( $fields['sale_price'] !== '' ) {
+                $product->set_sale_price( $fields['sale_price'] );
             }
-            if ( $data['stock'] !== '' ) {
+            if ( $fields['stock'] !== '' ) {
                 $product->set_manage_stock( true );
-                $product->set_stock_quantity( (int) $data['stock'] );
+                $product->set_stock_quantity( (int) $fields['stock'] );
             }
-            if ( $data['stock_status'] !== '' ) {
+            if ( $fields['stock_status'] !== '' ) {
                 $product->set_manage_stock( true );
-                $product->set_stock_status( $data['stock_status'] );
-            }
-            if ( ! empty( $data['categories'] ) ) {
-                wp_set_post_terms( $id, $data['categories'], 'product_cat' );
+                $product->set_stock_status( $fields['stock_status'] );
             }
             $product->save();
         }

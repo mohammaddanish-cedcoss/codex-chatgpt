@@ -14,15 +14,18 @@
         <?php wp_nonce_field( 'abpe_bulk_edit', 'abpe_bulk_edit_nonce' ); ?>
 
         <div class="abpe-section">
-        <h2><?php esc_html_e( 'Select Products', 'abpe' ); ?></h2>
+        <h2><?php esc_html_e( 'Edit Products', 'abpe' ); ?></h2>
         <table class="widefat">
             <thead>
                 <tr>
                     <th><?php esc_html_e( 'Select', 'abpe' ); ?></th>
-                    <th><?php esc_html_e( 'Name', 'abpe' ); ?></th>
+                    <th><?php esc_html_e( 'Product', 'abpe' ); ?></th>
+                    <th><?php esc_html_e( 'Title', 'abpe' ); ?></th>
+                    <th><?php esc_html_e( 'Description', 'abpe' ); ?></th>
                     <th><?php esc_html_e( 'Price', 'abpe' ); ?></th>
                     <th><?php esc_html_e( 'Sale Price', 'abpe' ); ?></th>
                     <th><?php esc_html_e( 'Stock', 'abpe' ); ?></th>
+                    <th><?php esc_html_e( 'Stock Status', 'abpe' ); ?></th>
                 </tr>
             </thead>
             <tbody>
@@ -30,58 +33,21 @@
                     <tr>
                         <td><input type="checkbox" name="product_ids[]" value="<?php echo esc_attr( $product->get_id() ); ?>" /></td>
                         <td><?php echo esc_html( $product->get_name() ); ?></td>
-                        <td><?php echo esc_html( $product->get_regular_price() ); ?></td>
-                        <td><?php echo esc_html( $product->get_sale_price() ); ?></td>
-                        <td><?php echo esc_html( $product->get_stock_quantity() ); ?></td>
+                        <td><input type="text" name="products[<?php echo esc_attr( $product->get_id() ); ?>][title]" value="<?php echo esc_attr( $product->get_name() ); ?>" /></td>
+                        <td><textarea name="products[<?php echo esc_attr( $product->get_id() ); ?>][description]" rows="2" class="large-text"><?php echo esc_textarea( $product->get_description() ); ?></textarea></td>
+                        <td><input type="text" name="products[<?php echo esc_attr( $product->get_id() ); ?>][price]" value="<?php echo esc_attr( $product->get_regular_price() ); ?>" /></td>
+                        <td><input type="text" name="products[<?php echo esc_attr( $product->get_id() ); ?>][sale_price]" value="<?php echo esc_attr( $product->get_sale_price() ); ?>" /></td>
+                        <td><input type="text" name="products[<?php echo esc_attr( $product->get_id() ); ?>][stock]" value="<?php echo esc_attr( $product->get_stock_quantity() ); ?>" /></td>
+                        <td>
+                            <select name="products[<?php echo esc_attr( $product->get_id() ); ?>][stock_status]">
+                                <option value=""><?php esc_html_e( 'No Change', 'abpe' ); ?></option>
+                                <option value="instock" <?php selected( $product->get_stock_status(), 'instock' ); ?>><?php esc_html_e( 'In stock', 'abpe' ); ?></option>
+                                <option value="outofstock" <?php selected( $product->get_stock_status(), 'outofstock' ); ?>><?php esc_html_e( 'Out of stock', 'abpe' ); ?></option>
+                            </select>
+                        </td>
                     </tr>
                 <?php endforeach; ?>
             </tbody>
-        </table>
-        </div>
-
-        <div class="abpe-section">
-        <h2><?php esc_html_e( 'Changes', 'abpe' ); ?></h2>
-        <table class="form-table">
-            <tr>
-                <th><label for="title"><?php esc_html_e( 'Title', 'abpe' ); ?></label></th>
-                <td><input type="text" name="title" id="title" /></td>
-            </tr>
-            <tr>
-                <th><label for="description"><?php esc_html_e( 'Description', 'abpe' ); ?></label></th>
-                <td><textarea name="description" id="description" rows="3" class="large-text"></textarea></td>
-            </tr>
-            <tr>
-                <th><label for="price"><?php esc_html_e( 'Price', 'abpe' ); ?></label></th>
-                <td><input type="text" name="price" id="price" /></td>
-            </tr>
-            <tr>
-                <th><label for="sale_price"><?php esc_html_e( 'Sale Price', 'abpe' ); ?></label></th>
-                <td><input type="text" name="sale_price" id="sale_price" /></td>
-            </tr>
-            <tr>
-                <th><label for="stock"><?php esc_html_e( 'Stock Qty', 'abpe' ); ?></label></th>
-                <td><input type="text" name="stock" id="stock" /></td>
-            </tr>
-            <tr>
-                <th><label for="stock_status"><?php esc_html_e( 'Stock Status', 'abpe' ); ?></label></th>
-                <td>
-                    <select name="stock_status" id="stock_status">
-                        <option value=""><?php esc_html_e( 'No Change', 'abpe' ); ?></option>
-                        <option value="instock"><?php esc_html_e( 'In stock', 'abpe' ); ?></option>
-                        <option value="outofstock"><?php esc_html_e( 'Out of stock', 'abpe' ); ?></option>
-                    </select>
-                </td>
-            </tr>
-            <tr>
-                <th><label for="categories"><?php esc_html_e( 'Categories', 'abpe' ); ?></label></th>
-                <td>
-                    <select name="categories[]" id="categories" multiple>
-                        <?php foreach ( $categories as $cat ) : ?>
-                            <option value="<?php echo esc_attr( $cat->term_id ); ?>"><?php echo esc_html( $cat->name ); ?></option>
-                        <?php endforeach; ?>
-                    </select>
-                </td>
-            </tr>
         </table>
         </div>
 

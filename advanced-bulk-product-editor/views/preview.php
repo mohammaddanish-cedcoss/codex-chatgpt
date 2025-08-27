@@ -31,14 +31,10 @@
                 <?php endforeach; ?>
             </tbody>
         </table>
-        <?php foreach ( $data as $key => $value ) : ?>
-            <?php if ( is_array( $value ) ) : ?>
-                <?php foreach ( $value as $v ) : ?>
-                    <input type="hidden" name="<?php echo esc_attr( $key ); ?>[]" value="<?php echo esc_attr( $v ); ?>" />
-                <?php endforeach; ?>
-            <?php else : ?>
-                <input type="hidden" name="<?php echo esc_attr( $key ); ?>" value="<?php echo esc_attr( $value ); ?>" />
-            <?php endif; ?>
+        <?php foreach ( $data as $id => $fields ) : ?>
+            <?php foreach ( $fields as $key => $value ) : ?>
+                <input type="hidden" name="products[<?php echo esc_attr( $id ); ?>][<?php echo esc_attr( $key ); ?>]" value="<?php echo esc_attr( $value ); ?>" />
+            <?php endforeach; ?>
         <?php endforeach; ?>
         <p>
             <button type="submit" class="button button-primary"><?php esc_html_e( 'Apply Changes', 'abpe' ); ?></button>

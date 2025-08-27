@@ -41,25 +41,30 @@ class ABPE_Admin {
         // Handle form submissions.
         $notice = '';
         if ( isset( $_POST['abpe_bulk_edit_nonce'] ) && wp_verify_nonce( wp_unslash( $_POST['abpe_bulk_edit_nonce'] ), 'abpe_bulk_edit' ) ) {
-            $ids      = isset( $_POST['product_ids'] ) ? array_map( 'intval', (array) $_POST['product_ids'] ) : array();
-            $data     = array(
-                'title'       => isset( $_POST['title'] ) ? wc_clean( wp_unslash( $_POST['title'] ) ) : '',
-                'description' => isset( $_POST['description'] ) ? wp_kses_post( wp_unslash( $_POST['description'] ) ) : '',
-                'price'       => isset( $_POST['price'] ) ? wc_clean( wp_unslash( $_POST['price'] ) ) : '',
-                'sale_price'  => isset( $_POST['sale_price'] ) ? wc_clean( wp_unslash( $_POST['sale_price'] ) ) : '',
-                'stock'       => isset( $_POST['stock'] ) ? wc_clean( wp_unslash( $_POST['stock'] ) ) : '',
-                'stock_status' => isset( $_POST['stock_status'] ) ? wc_clean( wp_unslash( $_POST['stock_status'] ) ) : '',
-                'categories'  => isset( $_POST['categories'] ) ? array_map( 'intval', (array) $_POST['categories'] ) : array(),
-            );
+            $ids     = isset( $_POST['product_ids'] ) ? array_map( 'intval', (array) $_POST['product_ids'] ) : array();
+            $raw     = isset( $_POST['products'] ) ? (array) $_POST['products'] : array();
+            $data    = array();
+
+            foreach ( $ids as $id ) {
+                $row             = isset( $raw[ $id ] ) ? $raw[ $id ] : array();
+                $data[ $id ] = array(
+                    'title'        => isset( $row['title'] ) ? wc_clean( wp_unslash( $row['title'] ) ) : '',
+                    'description'  => isset( $row['description'] ) ? wp_kses_post( wp_unslash( $row['description'] ) ) : '',
+                    'price'        => isset( $row['price'] ) ? wc_clean( wp_unslash( $row['price'] ) ) : '',
+                    'sale_price'   => isset( $row['sale_price'] ) ? wc_clean( wp_unslash( $row['sale_price'] ) ) : '',
+                    'stock'        => isset( $row['stock'] ) ? wc_clean( wp_unslash( $row['stock'] ) ) : '',
+                    'stock_status' => isset( $row['stock_status'] ) ? wc_clean( wp_unslash( $row['stock_status'] ) ) : '',
+                );
+            }
 
             if ( isset( $_POST['abpe_preview'] ) ) {
-                $preview = ABPE_Bulk_Editor::preview_changes( $ids, $data );
+                $preview = ABPE_Bulk_Editor::preview_changes( $data );
                 include ABPE_PLUGIN_DIR . 'views/preview.php';
                 return;
             } elseif ( isset( $_POST['abpe_export'] ) ) {
                 ABPE_Import_Export::export_csv( $ids );
             } else {
-                ABPE_Bulk_Editor::apply_changes( $ids, $data );
+                ABPE_Bulk_Editor::apply_changes( $data );
                 $notice = __( 'Products updated successfully.', 'abpe' );
             }
         } elseif ( isset( $_POST['abpe_import_export_nonce'] ) && wp_verify_nonce( wp_unslash( $_POST['abpe_import_export_nonce'] ), 'abpe_import_export' ) && isset( $_POST['abpe_import'] ) ) {
@@ -71,10 +76,6 @@ class ABPE_Admin {
         }
 
         $products = wc_get_products( array( 'limit' => -1 ) );
-        $categories = get_terms( array(
-            'taxonomy'   => 'product_cat',
-            'hide_empty' => false,
-        ) );
         include ABPE_PLUGIN_DIR . 'views/admin-page.php';
     }
 }
