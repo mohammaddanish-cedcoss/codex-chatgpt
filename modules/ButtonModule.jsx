@@ -7,14 +7,14 @@ import Box from "@mui/material/Box";
 import { Stack } from "@mui/system";
 import Chip from "@mui/material/Chip";
 
+const propsList = ["children", "variant", "size", "id", "className"];
+
 export default function ButtonModule({
   title = "Simple Button",
   subtitle = "WpsButton.jsx",
   ctaLabel = "Click Me",
   onCta,
 }) {
-  const propsList = ["children", "variant", "size", "id", "classname"];
-
   return (
     <Grid container spacing={2} alignItems="start">
       <Grid item sx={{ maxWidth: "200px", width: "100%" }}>

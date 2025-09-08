@@ -17,11 +17,7 @@ class WPS_Boiler_Plate_Public {
         $url  = WPSBP_URL . $rel;
 
         if ( file_exists( $path ) ) {
-            // If bundling React:
-            wp_register_script( 'wpsbp-public', $url, [], filemtime( $path ), true );
-
-            // If externalizing React to front (less common), do:
-            // wp_register_script( 'wpsbp-public', $url, [ 'wp-element' ], filemtime( $path ), true );
+            wp_register_script( 'wpsbp-public', $url, [ 'wp-element' ], filemtime( $path ), true );
         }
     }
 
