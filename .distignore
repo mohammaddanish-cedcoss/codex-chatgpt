@@ -1,0 +1,21 @@
+# Build / dev stuff
+node_modules/
+components/
+modules/
+admin/src/
+public/src/
+webpack*.js
+babel.config.* 
+.babelrc*
+.eslintrc*
+.vscode/
+.github/
+.gitignore
+.editorconfig
+package.json
+package-lock.json
+pnpm-lock.yaml
+yarn.lock
+*.map
+*.md
+tests/
