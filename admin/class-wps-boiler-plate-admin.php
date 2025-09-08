@@ -44,17 +44,13 @@ class WPS_Boiler_Plate_Admin {
             return;
         }
 
-        // If you BUNDLE React in build.js:
         wp_enqueue_script(
             'wpsbp-admin',
             $url,
-            [],
+            [ 'wp-element' ],
             filemtime( $path ),
             true
         );
-
-        // If you EXTERNALIZE React to WP in webpack (externals), use:
-        // wp_enqueue_script('wpsbp-admin', $url, ['wp-element'], filemtime($path), true);
 
         wp_localize_script( 'wpsbp-admin', 'WPSBP_ADMIN', [
             'ajaxUrl' => admin_url( 'admin-ajax.php' ),

@@ -2,18 +2,30 @@ import * as React from "react";
 import Button from "@mui/material/Button";
 import SendIcon from "@mui/icons-material/Send";
 
-export default function WpsIconButton(props) {
+export default function WpsIconButton({
+  id = "wps-icon-btn",
+  className = "wps-icon-btn",
+  variant = "contained",
+  endIcon = <SendIcon />,
+  href,
+  newTab = false,
+  sx = {},
+  children = "Send",
+  ...rest
+}) {
   return (
     <Button
-      id={props.id || "wps-icon-btn"}
-      className={props.className || "wps-icon-btn"}
-      variant={props.variant || "contained"}
-      endIcon={props.endIcon || <SendIcon />}
-      href={props.href} // external or internal URL
-      newTab={props.newTab || true}
-      sx={{lineHeight: "1.5", ...props.sx}}
+      id={id}
+      className={className}
+      variant={variant}
+      endIcon={endIcon}
+      href={href}
+      target={newTab ? "_blank" : undefined}
+      rel={newTab ? "noopener noreferrer" : undefined}
+      sx={{ lineHeight: "1.5", ...sx }}
+      {...rest}
     >
-      {props.children || "Send"}
+      {children}
     </Button>
   );
 }

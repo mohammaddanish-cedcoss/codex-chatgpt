@@ -42,6 +42,10 @@ const makeConfig = ({
   },
   devtool: mode === "production" ? false : "source-map",
   optimization: { minimize: mode === "production" },
+  externals: {
+    react: "React",
+    "react-dom": "ReactDOM",
+  },
 });
 
 module.exports = [
